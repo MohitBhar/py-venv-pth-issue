@@ -1,0 +1,30 @@
+load("@aspect_rules_py//py:defs.bzl", "py_binary", "py_venv", "py_library")
+
+py_library(
+    name = "app_lib",
+    srcs = ["main.py"],
+    imports = [".."],
+    deps = ["//lib/calculator:calculator"],
+)
+
+py_binary(
+    name = "app",
+    srcs = ["main.py"],
+    deps = [":app_lib"],
+)
+
+# Virtual environment target for testing
+# This reproduces the issue: py_venv doesn't generate venv.venv.pth
+# causing ModuleNotFoundError for calculator module
+py_venv(
+    name = "venv",
+    deps = [
+        ":app_lib",
+    ],
+)
+
+sh_test(
+    name = "venv_test",
+    srcs = ["test_venv.sh"],
+    data = [":venv", ":app"],
+)

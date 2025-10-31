@@ -1,0 +1,9 @@
+load("@aspect_rules_py//py:defs.bzl", "py_library")
+
+py_library(
+    name = "calculator",
+    srcs = ["calculator.py", "__init__.py"],
+    imports = [".."],  # Add lib/ to Python path so calculator package can be imported
+    visibility = ["//app:__subpackages__"],
+    deps = ["@pip//requests"],
+)
